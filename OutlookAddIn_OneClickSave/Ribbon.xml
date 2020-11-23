@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="Ribbon_Load">
+  <ribbon>
+    <tabs>
+      <!--メール画面のホームタブにリボンを作成-->
+      <tab idMso="TabMail">
+
+        <!--移動グループの後ろにワンクリック保存グループを作成-->
+        <group id="GroupOneClickSave"
+               insertAfterMso="GroupMoveActions"
+               label="ワンクリック保存"
+               autoScale="true">
+
+          <!--保存ボタン-->
+          <button id="SaveButton"
+                  label="保存&#xD;"
+                  onAction="OnSaveButton"
+                  size="large"
+                  imageMso="FileSave"
+                  screentip="選択されたメールを保存します。" />
+
+          <!--設定ボタン-->
+          <button id="SettingButton"
+                  label="設定&#xD;"
+                  onAction="OnSettingButton"
+                  size="normal"
+                  screentip="設定画面を表示します。" />
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>
+
