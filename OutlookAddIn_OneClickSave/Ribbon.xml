@@ -5,9 +5,8 @@
       <!--メール画面のホームタブにリボンを作成-->
       <tab idMso="TabMail">
 
-        <!--移動グループの後ろにワンクリック保存グループを作成-->
+        <!--ワンクリック保存グループを作成-->
         <group id="GroupOneClickSave"
-               insertAfterMso="GroupMoveActions"
                label="ワンクリック保存"
                autoScale="true">
 
