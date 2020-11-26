@@ -62,17 +62,10 @@ namespace OutlookAddIn_OneClickSave
                         //保存対象のMailItemを取得
                         var selectMailItem = item as Outlook.MailItem;
 
-                        //件名からファイル名を作成
-                        string filename = selectMailItem.Subject + ".msg";
-                        filename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
-
-                        //メールの保存先パスを作成
-                        string mailSavePath = Path.Combine(Properties.Settings.Default.SaveDir, filename);
-
-                        if(Properties.Settings.Default.IsSeparateAttachments == true)
+                        if (Properties.Settings.Default.IsSeparateAttachments == true)
                         {
                             //添付ファイルを分離する設定の場合
-                            
+
                             //添付ファイルを保存
                             foreach (var attachment in selectMailItem.Attachments.Cast<Outlook.Attachment>())
                             {
@@ -83,38 +76,27 @@ namespace OutlookAddIn_OneClickSave
                                 attachment.SaveAsFile(attachmentSavePath);
                             }
 
-                            //保存用のMailItemを作成
-                            Outlook.MailItem saveMailItem = Globals.ThisAddIn.Application.CreateItem(Outlook.OlItemType.olMailItem);
+                            //件名からファイル名を作成
+                            string filename = selectMailItem.Subject + ".txt";
+                            filename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
 
-                            //MailItemの要素を保存用MailItemの要素にコピー
-                            saveMailItem.To = selectMailItem.To;
-                            saveMailItem.CC = selectMailItem.CC;
-                            saveMailItem.BCC = selectMailItem.BCC;
-                            saveMailItem.Subject = selectMailItem.Subject;
-                            saveMailItem.BodyFormat = selectMailItem.BodyFormat;
+                            //メールの保存先パスを作成
+                            string mailSavePath = Path.Combine(Properties.Settings.Default.SaveDir, filename);
 
-                            if (selectMailItem.BodyFormat == Outlook.OlBodyFormat.olFormatPlain)
-                            {
-                                //本文がテキスト形式の場合、Body要素をコピーする。
-                                saveMailItem.Body = selectMailItem.Body;
-                            }
-                            else if (selectMailItem.BodyFormat == Outlook.OlBodyFormat.olFormatHTML)
-                            {
-                                //本文がHTML形式の場合、HTMLBody要素をコピーする。
-                                saveMailItem.HTMLBody = selectMailItem.HTMLBody;
-                            }
-                            else
-                            {
-                                //本文がリッチテキスト形式や指定なしの場合は非サポート
-                                ;
-                            }
-
-                            //コピーが終わったらMailItemを保存
-                            saveMailItem.SaveAs(mailSavePath);
+                            //MailItemをTXT形式で保存
+                            selectMailItem.SaveAs(mailSavePath, Outlook.OlSaveAsType.olTXT);
                         }
                         else
                         {
                             //添付ファイルを分離しない設定の場合
+
+                            //件名からファイル名を作成
+                            string filename = selectMailItem.Subject + ".msg";
+                            filename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
+
+                            //メールの保存先パスを作成
+                            string mailSavePath = Path.Combine(Properties.Settings.Default.SaveDir, filename);
+
                             //MailItemをそのまま保存
                             selectMailItem.SaveAs(mailSavePath);
                         }
