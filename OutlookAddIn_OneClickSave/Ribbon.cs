@@ -100,6 +100,8 @@ namespace OutlookAddIn_OneClickSave
                             //MailItemをそのまま保存
                             selectMailItem.SaveAs(mailSavePath);
                         }
+
+                        Marshal.ReleaseComObject(selectMailItem);
                     }
                 }
                 MessageBox.Show("選択されたメールを保存しました。", "情報", MessageBoxButtons.OK, MessageBoxIcon.Information);
