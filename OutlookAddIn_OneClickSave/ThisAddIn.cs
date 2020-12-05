@@ -20,9 +20,11 @@ namespace OutlookAddIn_OneClickSave
             //    を Outlook のシャットダウン時に実行する必要があります。https://go.microsoft.com/fwlink/?LinkId=506785 をご覧ください
         }
 
+        /// <summary>
+        /// リボンを使うためのおまじない
+        /// </summary>
         protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
         {
-            //リボンを使うためのおまじないです。
             return new Ribbon();
         }
 

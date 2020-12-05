@@ -26,7 +26,7 @@ namespace OutlookAddIn_OneClickSave
         {
             string ribbonXML = String.Empty;
 
-            //メール一覧画面のみ、アドインを表示する。
+            // メール一覧画面のみ、アドインを表示する。
             if (ribbonID == "Microsoft.Outlook.Explorer")
             {
                 return GetResourceText("OutlookAddIn_OneClickSave.Ribbon.xml");
@@ -43,61 +43,62 @@ namespace OutlookAddIn_OneClickSave
             this.ribbon = ribbonUI;
         }
 
+        /// <summary>
+        /// 保存ボタン押下時の処理
+        /// </summary>
         public void OnSaveButton(Office.IRibbonControl control)
         {
-            //保存ボタン押下時の処理
-
-            //設定読み込み
+            // 設定読み込み
             Properties.Settings.Default.Reload();
 
-            //保存先フォルダが存在する場合のみ処理
+            // 保存先フォルダが存在する場合のみ処理
             if (Directory.Exists(Properties.Settings.Default.SaveDir) == true) {
-                //選択しているメールの取得
+                // 選択しているメールの取得
                 var explorer = Globals.ThisAddIn.Application.ActiveExplorer();
                 foreach (var item in explorer.Selection)
                 {
-                    //選択数分処理
+                    // 選択数分処理
                     if (item is Outlook.MailItem)
                     {
-                        //保存対象のMailItemを取得
+                        // 保存対象のMailItemを取得
                         var selectMailItem = item as Outlook.MailItem;
 
                         if (Properties.Settings.Default.IsSeparateAttachments == true)
                         {
-                            //添付ファイルを分離する設定の場合
+                            // 添付ファイルを分離する設定の場合
 
-                            //添付ファイルを保存
+                            // 添付ファイルを保存
                             foreach (var attachment in selectMailItem.Attachments.Cast<Outlook.Attachment>())
                             {
-                                //添付ファイルの保存先パスを作成
+                                // 添付ファイルの保存先パスを作成
                                 string attachmentSavePath = Path.Combine(Properties.Settings.Default.SaveDir, attachment.FileName);
 
-                                //添付ファイルを保存
+                                // 添付ファイルを保存
                                 attachment.SaveAsFile(attachmentSavePath);
                             }
 
-                            //件名からファイル名を作成
+                            // 件名からファイル名を作成
                             string filename = selectMailItem.Subject + ".txt";
                             filename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
 
-                            //メールの保存先パスを作成
+                            // メールの保存先パスを作成
                             string mailSavePath = Path.Combine(Properties.Settings.Default.SaveDir, filename);
 
-                            //MailItemをTXT形式で保存
+                            // MailItemをTXT形式で保存
                             selectMailItem.SaveAs(mailSavePath, Outlook.OlSaveAsType.olTXT);
                         }
                         else
                         {
-                            //添付ファイルを分離しない設定の場合
+                            // 添付ファイルを分離しない設定の場合
 
-                            //件名からファイル名を作成
+                            // 件名からファイル名を作成
                             string filename = selectMailItem.Subject + ".msg";
                             filename = string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
 
-                            //メールの保存先パスを作成
+                            // メールの保存先パスを作成
                             string mailSavePath = Path.Combine(Properties.Settings.Default.SaveDir, filename);
 
-                            //MailItemをそのまま保存
+                            // MailItemをそのまま保存
                             selectMailItem.SaveAs(mailSavePath);
                         }
 
@@ -113,11 +114,12 @@ namespace OutlookAddIn_OneClickSave
             }
         }
 
+        /// <summary>
+        /// 設定ボタン押下時の処理
+        /// </summary>
         public void OnSettingButton(Office.IRibbonControl control)
         {
-            //設定ボタン押下時の処理
-            
-            //設定が終わらないと保存操作をさせないように、モーダルで表示する。
+            // 設定が終わらないと保存操作をさせないように、モーダルで表示する。
             SettingForm form = new SettingForm();
             form.ShowDialog();
         }

@@ -16,58 +16,64 @@ namespace OutlookAddIn_OneClickSave
         {
             InitializeComponent();
 
-            //保存先フォルダテキストボックスへのDrag&Dropを許可
+            // 保存先フォルダテキストボックスへのDrag&Dropを許可
             textBoxSaveDir.AllowDrop = true;
 
-            //設定読み込み
+            // 設定読み込み
             Properties.Settings.Default.Reload();
             textBoxSaveDir.Text = Properties.Settings.Default.SaveDir;
             checkBoxIsSeparateAttachments.Checked = Properties.Settings.Default.IsSeparateAttachments;
         }
 
+        /// <summary>
+        /// 設定保存ボタン押下時の処理
+        /// </summary>
         private void buttonSaveSetting_Click(object sender, EventArgs e)
         {
-            //設定保存ボタン押下時の処理
-            //設定書き込み
+            // 設定書き込み
             Properties.Settings.Default.SaveDir = textBoxSaveDir.Text;
             Properties.Settings.Default.IsSeparateAttachments = checkBoxIsSeparateAttachments.Checked;
             Properties.Settings.Default.Save();
             
-            //設定画面を閉じる
+            // 設定画面を閉じる
             this.Close();
         }
 
+        /// <summary>
+        /// 選択ボタン押下時の処理
+        /// </summary>
         private void buttonSelectSaveDir_Click(object sender, EventArgs e)
         {
-            //選択ボタン押下時の処理
             using (FolderBrowserDialog dialog = new FolderBrowserDialog())
             {
-                //初期選択フォルダー
+                // 初期選択フォルダー
                 dialog.SelectedPath = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-                //ダイアログに表示する説明文
+                // ダイアログに表示する説明文
                 dialog.Description = "メールの保存先を指定してください。";
 
-                //新しくフォルダを作成することを許可する
+                // 新しくフォルダを作成することを許可する
                 dialog.ShowNewFolderButton = true;
 
-                //ダイアログを表示する。
+                // ダイアログを表示する。
                 DialogResult result = dialog.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    //選択されたフォルダを取得する
+                    // 選択されたフォルダを取得する
                     textBoxSaveDir.Text = dialog.SelectedPath;
                 }
                 else
                 {
-                    //キャンセルの場合は何もしない
+                    // キャンセルの場合は何もしない
                 }
             }
         }
 
+        /// <summary>
+        /// 保存先フォルダテキストボックスにドラッグしたときの処理
+        /// </summary>
         private void textBoxSaveDir_DragEnter(object sender, DragEventArgs e)
         {
-            //保存先フォルダテキストボックスにドラッグしたときの処理
             if(e.Data.GetDataPresent(DataFormats.FileDrop, true) == true)
             {
                 e.Effect = DragDropEffects.Copy;
@@ -78,14 +84,16 @@ namespace OutlookAddIn_OneClickSave
             }
         }
 
+        /// <summary>
+        /// 保存先フォルダテキストボックスにドロップしたときの処理
+        /// </summary>
         private void textBoxSaveDir_DragDrop(object sender, DragEventArgs e)
         {
-            //保存先フォルダテキストボックスにドロップしたときの処理
             if (e.Data.GetData(DataFormats.FileDrop) is string[] dropitems)
             {
                 if(System.IO.Directory.Exists(dropitems[0]) == true)
                 {
-                    //フォルダが存在すればテキストボックスに格納
+                    // フォルダが存在すればテキストボックスに格納
                     textBoxSaveDir.Text = dropitems[0];
                 }
             }
