@@ -12,6 +12,13 @@ namespace OutlookAddIn_OneClickSave
     {
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
+            // Officeやアドインのバージョンアップ時に設定を引き継ぐ
+            if (Properties.Settings.Default.IsUpgrade == false)
+            {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.IsUpgrade = true;
+                Properties.Settings.Default.Save();
+            }
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
